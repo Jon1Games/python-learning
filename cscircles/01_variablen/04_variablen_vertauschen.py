@@ -1,3 +1,8 @@
+# Variablen in CSCircles
+x = 10
+y= 20
+
+# Program
 xOriginal = x
 x = y
 y = xOriginal
