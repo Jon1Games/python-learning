@@ -1,1 +1,2 @@
-Random PYthon mini scripts i created in order to learn more about Python.
+Random Python code I created in order to learn more about Python.
+Also some stuff from school lessons.
