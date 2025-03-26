@@ -1,23 +1,16 @@
-import requests
 import zipfile
+import requests
 import csv
 import os
 import sqlite3
 import shutil
-from bs4 import BeautifulSoup
 import time
-from util import replace_neg_999_with_null
+from WeatherDataProject.db_util import replace_neg_999_with_null
+from util import get_all_links
 
 url = "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/kl/historical/"
 
-response = requests.get(url)
-soup = BeautifulSoup(response.content, "html.parser")
-
-files = []
-for link in soup.find_all('a'):
-    href = link.get('href')
-    if href.endswith('.zip'):
-        files.append(url + href)
+files = get_all_links(url, ".zip")
 
 # Connect to SQLite database (or create it if it doesn't exist)
 conn = sqlite3.connect('weather_data.db')
@@ -33,7 +26,7 @@ for file in files:
     with zipfile.ZipFile("temp.zip", "r") as zip_ref:
         zip_ref.extractall(".extracted_files")
 
-    # Remove every thinh exept station infos and prod clima data
+    # Remove every thing exept station infos and clima data
     for filename in os.listdir(".extracted_files"):
         if not filename.startswith("produkt") and not filename.startswith("Metadaten_Geographie"):
             os.remove(os.path.join(".extracted_files", filename))
@@ -75,6 +68,7 @@ for file in files:
     # Commit changes
     conn.commit()
 
+    # revent ip-ban
     time.sleep(1.5)    
 
 # Replace -999 with null
