@@ -58,6 +58,8 @@ for file in files:
         
         # Execute the query for each row of data
         for row in data:
+            # Rip white space as the some field will look like this: "     1" (station_id)
+            row = [cell.strip() for cell in row]
             try:
                 c.execute(insert_query, row)
             except sqlite3.ProgrammingError as e:
