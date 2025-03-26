@@ -66,18 +66,18 @@ def format_time(oTime):
     day = time[6:8]
     return f"{day}.{month}.{year}"
 
-print("all from station 1 with limit 5")
-data = get_time_data(1, "NM", 5)
-for set in data:
-    print(f"{format_time(set[0])}: {set[1]}")
-    
-print("All between 01.01.1937 and 12.01.1937 fromstation 1")
-data_between = get_time_data_between(1, "NM", format_time("01.01.1937"), format_time("12.01.1937"))
-for set in data:
-    print(f"{format_time(set[0])}: {set[1]}")
+# print("all from station 1 with limit 50")
+# data = get_time_data(1, "NM", 50)
+# for set in data:
+#     print(f"{format_time(set[0])}: {set[1]}")  
 
-print("Averages all form station 1")
-print(get_averages(1, "NM"))
+# print("All between 01.01.1940 and 01.01.1950 fromstation 1")
+# data = get_time_data_between(1, "NM", format_time("01.01.1940"), format_time("01.02.1940"))
+# for set in data:
+#     print(f"{format_time(set[0])}: {set[1]}")
 
-print("Averages between 01.01.1937 and 12.01.1937 from station 1")
-print(get_averages_between(1, "NM", format_time("01.01.1937"), format_time("12.01.1937")))
+# print("Averages all from station 1")
+# print(get_averages(1, "NM"))
+ 
+# print("Averages between 01.01.1937 and 12.01.1937 from station 1")# 
+# print(get_averages_between(1, "NM", format_time("01.01.1937"), format_time("12.01.1937")))# 
