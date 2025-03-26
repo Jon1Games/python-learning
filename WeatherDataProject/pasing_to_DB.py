@@ -45,6 +45,7 @@ for file in files:
         with open(os.path.join(".extracted_files", txt_file), newline='', encoding='latin1') as csvfile:
             reader = csv.reader(csvfile, delimiter=';')
             headers = next(reader)
+            headers = [cell.strip() for cell in headers]            
             data = list(reader)
         
         # Create table with the name of the file (without extension and numbers) and columns from CSV headers
