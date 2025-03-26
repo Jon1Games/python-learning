@@ -30,3 +30,4 @@ def replace_neg_999_with_null(conn, table_name):
             print(f"Skipping column {column} due to error: {e}")
 
     conn.commit()
+    print("Finisched the replacement from -999 to null")
