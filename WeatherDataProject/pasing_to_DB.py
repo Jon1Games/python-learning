@@ -5,17 +5,19 @@ import os
 import sqlite3
 import shutil
 import time
-from WeatherDataProject.db_util import replace_neg_999_with_null
+from db_util import replace_neg_999_with_null
 from util import get_all_links
 
 url = "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/kl/historical/"
 
+print("Query all links for .zip files")
 files = get_all_links(url, ".zip")
 
 # Connect to SQLite database (or create it if it doesn't exist)
 conn = sqlite3.connect('weather_data.db')
-c = conn.cursor()
+# c = conn.cursor()
 
+print("unzip the files and insert into database")
 for file in files:
     # Download the file
     response = requests.get(file)
@@ -72,7 +74,7 @@ for file in files:
     time.sleep(1.5)    
 
 # Replace -999 with null
-replace_neg_999_with_null(c, "produkt_klima_tag")
+replace_neg_999_with_null(conn, "produkt_klima_tag")
 
 # Close the connection
 conn.close()

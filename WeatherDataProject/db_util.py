@@ -13,6 +13,7 @@ def replace_neg_999_with_null(conn, table_name):
             conn: The SQLite database connection object.
             table_name (str): The name of the table to update.
     """
+    print("Start replacement from -999 to null")
     
     cursor = conn.cursor()
 
@@ -21,6 +22,7 @@ def replace_neg_999_with_null(conn, table_name):
     columns = [column[1] for column in cursor.fetchall()]
 
     for column in columns:
+        print(f"processing: {column}")
         try:
             # Update the column, setting -999 to NULL
             cursor.execute(f"UPDATE {table_name} SET {column} = NULL WHERE {column} = '-999'")
