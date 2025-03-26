@@ -6,6 +6,7 @@ import sqlite3
 import shutil
 from bs4 import BeautifulSoup
 import time
+from util import replace_neg_999_with_null
 
 url = "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/kl/historical/"
 
@@ -75,6 +76,9 @@ for file in files:
     conn.commit()
 
     time.sleep(1.5)    
+
+# Replace -999 with null
+replace_neg_999_with_null(c, "produkt_klima_tag")
 
 # Close the connection
 conn.close()
