@@ -3,7 +3,7 @@ from datetime import datetime
 
 db_name = "weather_data.db"
 
-def get_time_data(stations_id, field_name, limit):
+def get_time_data(stations_id, field_name, limit, start_date):
     """
     Retrieves data with times and an optional limit for an specific sation id
     Args:
@@ -17,7 +17,10 @@ def get_time_data(stations_id, field_name, limit):
     conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
 
-    cursor.execute(f"SELECT MESS_DATUM, {field_name} FROM produkt_klima_tag  WHERE STATIONS_ID = '{stations_id}' limit {limit};")
+    if stations_id == -1:
+        cursor.execute(f"SELECT STATIONS_ID, MESS_DATUM, {field_name} FROM produkt_klima_tag WHERE MESS_DATUM >= {start_date} limit {limit};")
+    else:
+        cursor.execute(f"SELECT STATIONS_ID, MESS_DATUM, {field_name} FROM produkt_klima_tag WHERE STATIONS_ID = '{stations_id}' WHERE MESS_DATUM >= {start_date} limit {limit};")
     data = cursor.fetchall()
 
     conn.close()
@@ -27,7 +30,10 @@ def get_time_data_between(stations_id, field_name, start_date, end_date):
     conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
 
-    cursor.execute(f"SELECT MESS_DATUM, {field_name} FROM produkt_klima_tag  WHERE STATIONS_ID = '{stations_id}' AND MESS_DATUM BETWEEN {start_date} and {end_date};")
+    if stations_id == -1:
+        cursor.execute(f"SELECT STATIONS_ID, MESS_DATUM, {field_name} FROM produkt_klima_tag WHERE MESS_DATUM BETWEEN {start_date} and {end_date};")
+    else:
+        cursor.execute(f"SELECT STATIONS_ID, MESS_DATUM, {field_name} FROM produkt_klima_tag WHERE STATIONS_ID = '{stations_id}' AND MESS_DATUM BETWEEN {start_date} and {end_date};")
     data = cursor.fetchall()
 
     conn.close()
@@ -37,21 +43,27 @@ def get_averages(stations_id, field_name):
     conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
 
-    cursor.execute(f"SELECT AVG({field_name}) FROM produkt_klima_tag  WHERE STATIONS_ID = '{stations_id}';")
-    data = cursor.fetchall()
+    if stations_id == -1:
+        cursor.execute(f"SELECT AVG({field_name}) FROM produkt_klima_tag;")
+    else:
+        cursor.execute(f"SELECT AVG({field_name}) FROM produkt_klima_tag WHERE STATIONS_ID = '{stations_id}';")
+    data = cursor.fetchone()
 
     conn.close()
-    return data[0][0]
+    return data[0]
 
 def get_averages_between(stations_id, field_name, start_date, end_date):
     conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
 
-    cursor.execute(f"SELECT AVG({field_name}) FROM produkt_klima_tag  WHERE STATIONS_ID = '{stations_id}' AND MESS_DATUM between {start_date} and {end_date};")
-    data = cursor.fetchall()
+    if stations_id == -1:
+        cursor.execute(f"SELECT AVG({field_name}) FROM produkt_klima_tag WHERE MESS_DATUM between {start_date} and {end_date};")
+    else:
+        cursor.execute(f"SELECT AVG({field_name}) FROM produkt_klima_tag WHERE STATIONS_ID = '{stations_id}' AND MESS_DATUM between {start_date} and {end_date};")
+    data = cursor.fetchone()
 
     conn.close()
-    return data[0][0]
+    return data[0]
 
 def format_time(oTime):
     """
@@ -66,18 +78,79 @@ def format_time(oTime):
     day = time[6:8]
     return f"{day}.{month}.{year}"
 
-# print("all from station 1 with limit 50")
-# data = get_time_data(1, "NM", 50)
-# for set in data:
-#     print(f"{format_time(set[0])}: {set[1]}")  
+station = input("Station id or name: ")
+if station.lower() == "all":
+    station = -1
+else:
+    try:
+        station = int(station)
+    except:
+        conn = sqlite3.connect(db_name)
+        cursor = conn.cursor()
 
-# print("All between 01.01.1940 and 01.01.1950 fromstation 1")
-# data = get_time_data_between(1, "NM", format_time("01.01.1940"), format_time("01.02.1940"))
-# for set in data:
-#     print(f"{format_time(set[0])}: {set[1]}")
+        cursor.execute(f"SELECT Stations_ID FROM Metadaten_Geographie WHERE Stationsname = '{station}';")
+        data = cursor.fetchone()
+        if data:
+            station = data[0]
+        else:
+            print(f"No station found with name {station}")
 
-# print("Averages all from station 1")
-# print(get_averages(1, "NM"))
- 
-# print("Averages between 01.01.1937 and 12.01.1937 from station 1")# 
-# print(get_averages_between(1, "NM", format_time("01.01.1937"), format_time("12.01.1937")))# 
+        conn.close()
+        
+print("""
+      Data stored:
+      QN_3
+      FX
+      FM
+      QN_4
+      RSK
+      RSKF
+      SDK
+      SHK_Tag
+      NM
+      VPM
+      PM
+      TMK
+      UPM
+      TXK
+      TNK
+      TGK
+      """)
+collumn = input("Wich data?: ").capitalize()
+        
+print("""
+      Querys:
+      1 - data with date with limit
+      2 - data with date between dates
+      3 - all averages
+      4 - all averages between
+      """)
+
+query_id = int(input("Query: "))
+
+if query_id == 1:
+    start_date = format_time(input("Start date: "))
+    limit = int(input("Limit: "))
+    print(f"Get {collumn} from station {station} with limit {limit} stating at {start_date}")
+    data = get_time_data(station, collumn, limit, start_date)
+    print("Station | Date: value")
+    for set in data:
+        print(f"{set[0]} | {format_time(set[1])}: {set[2]}") 
+elif query_id == 2:
+    print("Dates as DD.MM.YYYY")
+    start_date = format_time(input("Start date: "))
+    end_date = format_time(input("End date: "))
+    print(f"Get {collumn} between {start_date} and {end_date} fromstation {station}")
+    data = get_time_data_between(station, collumn, start_date, end_date)
+    print("Station | Date: value")
+    for set in data:
+        print(f"{set[0]} | {format_time(set[1])}: {set[2]}")
+elif query_id == 3:
+    print(f"Get all averages from station {station}")
+    print(get_averages(station, collumn))
+elif query_id == 4:
+    print("Dates as DD.MM.YYYY")
+    start_date = format_time(input("Start date: "))
+    end_date = format_time(input("End date: "))
+    print(f"Averages between {start_date} and {end_date} from station {station}")
+    print(get_averages_between(station, collumn, start_date, end_date))
