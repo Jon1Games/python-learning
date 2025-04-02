@@ -98,24 +98,24 @@ else:
         conn.close()
         
 print("""
-      Data stored:
-      QN_3
-      FX
-      FM
-      QN_4
-      RSK
-      RSKF
-      SDK
-      SHK_Tag
-      NM
-      VPM
-      PM
-      TMK
-      UPM
-      TXK
-      TNK
-      TGK
-      """)
+    Data stored:
+    QN_3 - Quality index of 3 hours of sunshine duration
+    FX - Maximum wind speed
+    FM - Average wind speed
+    QN_4 - Quality index of 24-hour precipitation amount
+    RSK - Daily precipitation amount
+    RSKF - Precipitation form (rain or snow)
+    SDK - Sunshine duration
+    SHK_Tag - Daily snow depth
+    NM - Cloud cover
+    VPM - Vapour pressure
+    PM - Air pressure
+    TMK - Medium temperature at 2m height
+    UPM - Relative humidity
+    TXK - Maximum temperature at 2m height
+    TNK - Minimum temperature at 2m height
+    TGK - Daily average temperature at 2m height
+    """)
 collumn = input("Wich data?: ").capitalize()
         
 print("""
