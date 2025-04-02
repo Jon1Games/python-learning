@@ -146,7 +146,7 @@ elif query_id == 2:
     for set in data:
         print(f"{set[0]} | {format_time(set[1])}: {set[2]}")
 elif query_id == 3:
-    print(f"Get all averages from station {station}")
+    print(f"Get all averages from station {station} for {collumn}")
     print(get_averages(station, collumn))
 elif query_id == 4:
     print("Dates as DD.MM.YYYY")
