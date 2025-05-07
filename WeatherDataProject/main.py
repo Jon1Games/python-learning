@@ -1,5 +1,6 @@
 from pasing_to_DB import parsing_to_database
 from querys_DB import query
+import os
 
 def start():
     print("""
@@ -16,7 +17,14 @@ def start():
         exit()
         
     if inp == 1:
-        parsing_to_database()
+        if os.path.exists("weather_data.db"):
+            inp = input("Data is already stored, du you want to overwrite? [y/n]: ")
+            if inp.lower == "y":
+                os.remove("weather_data.db")
+                parsing_to_database()
+            else:
+                print("Skip download of data.")
+                print("")
     elif inp == 2:
         query()
     else:

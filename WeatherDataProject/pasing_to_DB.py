@@ -14,7 +14,7 @@ def parsing_to_database():
 
     # Connect to SQLite database (or create it if it doesn't exist)
     conn = sqlite3.connect('weather_data.db')
-    # c = conn.cursor()
+    c = conn.cursor()
 
     print("unzip the files and insert into database")
     for file in files:

@@ -19,7 +19,7 @@ def get_time_data(stations_id, field_name, limit, start_date):
     if stations_id == -1:
         cursor.execute(f"SELECT STATIONS_ID, MESS_DATUM, {field_name} FROM produkt_klima_tag WHERE MESS_DATUM >= {start_date} limit {limit};")
     else:
-        cursor.execute(f"SELECT STATIONS_ID, MESS_DATUM, {field_name} FROM produkt_klima_tag WHERE STATIONS_ID = '{stations_id}' WHERE MESS_DATUM >= {start_date} limit {limit};")
+        cursor.execute(f"SELECT STATIONS_ID, MESS_DATUM, {field_name} FROM produkt_klima_tag WHERE STATIONS_ID = '{stations_id}' AND MESS_DATUM >= {start_date} limit {limit};")
     data = cursor.fetchall()
 
     conn.close()
@@ -102,7 +102,6 @@ def query():
                 names = []
                 for entry in data:
                     names.append(entry[1])
-                names = list(set(names))
                 for name in names:
                     print(name)
                 
@@ -128,41 +127,43 @@ def query():
         TNK - Minimum temperature at 2m height
         TGK - Daily average temperature at 2m height
         """)
-    collumn = input("Wich data?: ").capitalize()
-            
-    print("""
-        Querys:
-        1 - data with date with limit
-        2 - data with date between dates
-        3 - all averages
-        4 - all averages between
-        """)
+    collumn = input("Wich data?: ").upper()
+    if collumn not in ["QN_3", "FM", "FX", "QN_4", "RSK", "RSKF", "SDK", "SHK_TAG", "NM", "VPM", "PM", "TMK", "UPM", "TXK", "TNK", "TGK"]:
+        print("not valid data field name.")
+    else:   
+        print("""
+            Querys:
+            1 - data with date with limit
+            2 - data with date between dates
+            3 - all averages
+            4 - all averages between
+            """)
 
-    query_id = int(input("Query: "))
+        query_id = int(input("Query: "))
 
-    if query_id == 1:
-        start_date = format_time(input("Start date: "))
-        limit = int(input("Limit: "))
-        print(f"Get {collumn} from station {station} with limit {limit} stating at {start_date}")
-        data = get_time_data(station, collumn, limit, start_date)
-        print("Station | Date: value")
-        for set in data:
-            print(f"{set[0]} | {format_time(set[1])}: {set[2]}") 
-    elif query_id == 2:
-        print("Dates as DD.MM.YYYY")
-        start_date = format_time(input("Start date: "))
-        end_date = format_time(input("End date: "))
-        print(f"Get {collumn} between {start_date} and {end_date} fromstation {station}")
-        data = get_time_data_between(station, collumn, start_date, end_date)
-        print("Station | Date: value")
-        for set in data:
-            print(f"{set[0]} | {format_time(set[1])}: {set[2]}")
-    elif query_id == 3:
-        print(f"Get all averages from station {station} for {collumn}")
-        print(get_averages(station, collumn))
-    elif query_id == 4:
-        print("Dates as DD.MM.YYYY")
-        start_date = format_time(input("Start date: "))
-        end_date = format_time(input("End date: "))
-        print(f"Averages between {start_date} and {end_date} from station {station}")
-        print(get_averages_between(station, collumn, start_date, end_date))
+        if query_id == 1:
+            start_date = format_time(input("Start date: "))
+            limit = int(input("Limit: "))
+            print(f"Get {collumn} from station {station} with limit {limit} stating at {start_date}")
+            data = get_time_data(station, collumn, limit, start_date)
+            print("Station | Date: value")
+            for set in data:
+                print(f"{set[0]} | {format_time(set[1])}: {set[2]}") 
+        elif query_id == 2:
+            print("Dates as DD.MM.YYYY")
+            start_date = format_time(input("Start date: "))
+            end_date = format_time(input("End date: "))
+            print(f"Get {collumn} between {start_date} and {end_date} fromstation {station}")
+            data = get_time_data_between(station, collumn, start_date, end_date)
+            print("Station | Date: value")
+            for set in data:
+                print(f"{set[0]} | {format_time(set[1])}: {set[2]}")
+        elif query_id == 3:
+            print(f"Get all averages from station {station} for {collumn}")
+            print(get_averages(station, collumn))
+        elif query_id == 4:
+            print("Dates as DD.MM.YYYY")
+            start_date = format_time(input("Start date: "))
+            end_date = format_time(input("End date: "))
+            print(f"Averages between {start_date} and {end_date} from station {station}")
+            print(get_averages_between(station, collumn, start_date, end_date))
