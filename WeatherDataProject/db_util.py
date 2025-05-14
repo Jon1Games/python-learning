@@ -1,5 +1,4 @@
 import sqlite3
-from datetime import datetime
 
 
 def replace_neg_999_with_null(conn, table_name):
