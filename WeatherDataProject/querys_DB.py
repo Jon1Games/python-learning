@@ -1,4 +1,6 @@
 import sqlite3
+import matplotlib.pyplot as plt
+from datetime import datetime
 
 db_name = "weather_data.db"
 
@@ -77,6 +79,52 @@ def format_time(oTime):
     day = time[6:8]
     return f"{day}.{month}.{year}"
 
+def plot_time_data(stations_id, field_name, limit, start_date):
+    """
+    Retrieves time series data and plots it using matplotlib.
+    """
+    data = get_time_data(stations_id, field_name, limit, start_date)
+    if not data:
+        print("No data found for plotting.")
+        return
+
+    dates = [datetime.strptime(str(item[1]), '%Y%m%d') for item in data]
+    values = [item[2] for item in data]
+    station_id = data[0][0] if data else "All"
+
+    plt.figure(figsize=(12, 6))
+    plt.plot(dates, values, marker='o', linestyle='-')
+    plt.xlabel("Date")
+    plt.ylabel(field_name)
+    plt.title(f"{field_name} over Time for Station {station_id}")
+    plt.grid(True)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+
+def plot_average_over_time(stations_id, field_name, start_date, end_date):
+    """
+    Retrieves time series data within a date range and plots the values over time.
+    """
+    data = get_time_data_between(stations_id, field_name, start_date, end_date)
+    if not data:
+        print("No data found for plotting.")
+        return
+
+    dates = [datetime.strptime(str(item[1]), '%Y%m%d') for item in data]
+    values = [item[2] for item in data]
+    station_id = data[0][0] if data else "All"
+
+    plt.figure(figsize=(12, 6))
+    plt.plot(dates, values, marker='o', linestyle='-')
+    plt.xlabel("Date")
+    plt.ylabel(field_name)
+    plt.title(f"{field_name} over Time for Station {station_id} ({format_time(start_date)} - {format_time(end_date)})")
+    plt.grid(True)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+
 def query():
     station = input("Station id or name: ")
     if station.lower() == "all":
@@ -142,19 +190,24 @@ def query():
         query_id = int(input("Query: "))
 
         if query_id == 1:
-            start_date = format_time(input("Start date: "))
+            print("Dates as DD.MM.YYYY")
+            start_date = input("Start date: ")
+            if start_date.__contains__("."):
+                start_date = format_time(start_date)
             limit = int(input("Limit: "))
             print(f"Get {collumn} from station {station} with limit {limit} stating at {start_date}")
-            data = get_time_data(station, collumn, limit, start_date)
+            data = plot_time_data(station, collumn, limit, start_date)
             print("Station | Date: value")
             for set in data:
                 print(f"{set[0]} | {format_time(set[1])}: {set[2]}") 
         elif query_id == 2:
             print("Dates as DD.MM.YYYY")
-            start_date = format_time(input("Start date: "))
+            start_date = input("Start date: ")
+            if start_date.__contains__("."):
+                start_date = format_time(start_date)
             end_date = format_time(input("End date: "))
             print(f"Get {collumn} between {start_date} and {end_date} fromstation {station}")
-            data = get_time_data_between(station, collumn, start_date, end_date)
+            data = plot_average_over_time(station, collumn, start_date, end_date)
             print("Station | Date: value")
             for set in data:
                 print(f"{set[0]} | {format_time(set[1])}: {set[2]}")
@@ -163,7 +216,11 @@ def query():
             print(get_averages(station, collumn))
         elif query_id == 4:
             print("Dates as DD.MM.YYYY")
-            start_date = format_time(input("Start date: "))
-            end_date = format_time(input("End date: "))
+            start_date =input("Start date: ")
+            if start_date.__contains__("."):
+                start_date = format_time(start_date)
+            end_date = input("End date: ")
+            if end_date.__contains__("."):
+                end_date = format_time(end_date)
             print(f"Averages between {start_date} and {end_date} from station {station}")
             print(get_averages_between(station, collumn, start_date, end_date))
