@@ -1,11 +1,11 @@
 from bs4 import BeautifulSoup
 import requests
 
-def get_all_links(url, endWith):
-    """
+def get_all_links(url, endsWith):
+    """Get all links from <a href="URL">
     Args:
         url (str): URL to the website to scrape.
-        endWith (str): The ending of the link to filter by.
+        endsWith (str): The ending of the link to filter by.
     Returns:
         list: A list of all hyperlinks that end with the specified string.
     """
@@ -15,6 +15,6 @@ def get_all_links(url, endWith):
     files = []
     for link in soup.find_all('a'):
         href = link.get('href')
-        if href.endswith(endWith):
+        if href.endswith(endsWith):
             files.append(url + href)
     return files
