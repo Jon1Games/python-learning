@@ -21,7 +21,7 @@ def get_time_data(stations_id, field_name, limit, start_date):
     if stations_id == -1:
         cursor.execute(f"SELECT STATIONS_ID, MESS_DATUM, {field_name} FROM produkt_klima_tag WHERE MESS_DATUM >= {start_date} limit {limit};")
     else:
-        cursor.execute(f"SELECT STATIONS_ID, MESS_DATUM, {field_name} FROM produkt_klima_tag WHERE STATIONS_ID = '{stations_id}' AND MESS_DATUM >= {start_date} limit {limit};")
+        cursor.execute(f"SELECT STATIONS_ID, MESS_DATUM, {field_name} FROM produkt_klima_tag WHERE STATIONS_ID = '{stations_id}' AND MESS_DATUM >= '{start_date}' limit {limit};")
     data = cursor.fetchall()
 
     conn.close()
@@ -30,11 +30,13 @@ def get_time_data(stations_id, field_name, limit, start_date):
 def get_time_data_between(stations_id, field_name, start_date, end_date):
     conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
+    
+    print(start_date, end_date)
 
     if stations_id == -1:
         cursor.execute(f"SELECT STATIONS_ID, MESS_DATUM, {field_name} FROM produkt_klima_tag WHERE MESS_DATUM BETWEEN {start_date} and {end_date};")
     else:
-        cursor.execute(f"SELECT STATIONS_ID, MESS_DATUM, {field_name} FROM produkt_klima_tag WHERE STATIONS_ID = '{stations_id}' AND MESS_DATUM BETWEEN {start_date} and {end_date};")
+        cursor.execute(f"SELECT STATIONS_ID, MESS_DATUM, {field_name} FROM produkt_klima_tag WHERE STATIONS_ID = '{stations_id}' AND MESS_DATUM BETWEEN '{start_date}' and '{end_date}';")
     data = cursor.fetchall()
 
     conn.close()
@@ -46,6 +48,7 @@ def get_averages(stations_id, field_name, start_date, limit):
     data = []
 
     for x in range(0, limit):
+        print("Process: " + str(start_date))
         cursor.execute(f"SELECT AVG({field_name}) FROM produkt_klima_tag WHERE MESS_DATUM BETWEEN '{start_date}0101' and '{start_date}1231' AND STATIONS_ID = '{stations_id}';")
         data.append(cursor.fetchone())
         start_date += 1
@@ -71,15 +74,19 @@ def plot_time_data(stations_id, field_name, limit: str, start_date):
     Retrieves time series data and plots it using matplotlib.
     
     """
+    if start_date.__contains__("."):
+        start_date = format_time(start_date)
     
     if limit.__contains__("."):
         limit = format_time(limit)
-        data = get_time_data_between(stations_id, field_name, start_date, limit)
+        data = get_time_data_between(stations_id, field_name, limit, start_date)
     else:
         data = get_time_data(stations_id, field_name, limit, start_date)
     if not data:
         print("No data found for plotting.")
         return
+    
+    print("finished query of data.")
 
     dates = []
     values = []
@@ -117,8 +124,6 @@ def plot_average_over_time(stations_id, field_name, start_date, end_date):
 
     dates = []
     values = []
-
-    print(data)
     
     for item in data:
         if item[0] is None:
@@ -203,21 +208,20 @@ def query():
         if query_id == 1:
             print("Dates as DD.MM.YYYY")
             start_date = input("Start date: ")
-            if start_date.__contains__("."):
-                start_date = format_time(start_date)
-            limit = int(input("Limit: "))
+            limit = input("Limit: ")
             print(f"Get {collumn} from station {station} with limit {limit} stating at {start_date}")
             plot_time_data(station, collumn, limit, start_date)
         elif query_id == 2:
             print("Dates as DD.MM.YYYY")
             start_date = input("Start date: ")
-            if start_date.__contains__("."):
-                start_date = format_time(start_date)
             end_date = input("End date: ")
             print(f"Get {collumn} between {start_date} and {end_date} fromstation {station}")
             plot_time_data(station, collumn, start_date, end_date)
         elif query_id == 3:
             print(f"Get yearly averages from station {station} for {collumn}")
-            start = int(input("Start Year: "))
-            end = int(input("End Year: "))
-            plot_average_over_time(station, collumn, start, end)
+            try:
+                start = int(input("Start Year: "))
+                end = int(input("End Year: "))
+                plot_average_over_time(station, collumn, start, end)
+            except:
+                print("only give yearly numbers, eg.: 2001")
