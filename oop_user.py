@@ -12,6 +12,13 @@ from datetime import date
 # | - birth_date: date          |
 # | - location: str             |
 # +-----------------------------+
+# | + User( first_name: str,    |
+# |         last_name: str,     |
+# |         email: str,         |
+# |         username: str,      |
+# |         birth_date: date,   |
+# |         location: str       |
+# |        )                    |
 # | + describe_user(): None     |
 # | + greet_user(): None        |
 # | + age(): int                |
