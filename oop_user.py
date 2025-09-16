@@ -5,12 +5,12 @@ from datetime import date
 # +-----------------------------+
 # |           User              |
 # +-----------------------------+
-# | - first_name: str           |
-# | - last_name: str            |
-# | - email: str                |
-# | - username: str             |
-# | - birth_date: date          |
-# | - location: str             |
+# | + first_name: str           |
+# | + last_name: str            |
+# | + email: str                |
+# | + username: str             |
+# | + birth_date: date          |
+# | + location: str             |
 # +-----------------------------+
 # | + User( first_name: str,    |
 # |         last_name: str,     |
