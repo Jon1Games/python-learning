@@ -6,7 +6,7 @@
 # │ + length: float                 │
 # │ + width: float                  │
 # ├─────────────────────────────────┤
-# │ + __init__(length, width)       │
+# │ + Rechteck(length, width)       │
 # │ + flaeche(): float              │
 # │ + umfang(): float               │
 # └─────────────────────────────────┘
