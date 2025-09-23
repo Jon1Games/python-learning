@@ -3,8 +3,8 @@
 # ┌─────────────────────────────────┐
 # │            Rechteck             │
 # ├─────────────────────────────────┤
-# │ - length: float                 │
-# │ - width: float                  │
+# │ + length: float                 │
+# │ + width: float                  │
 # ├─────────────────────────────────┤
 # │ + __init__(length, width)       │
 # │ + flaeche(): float              │
