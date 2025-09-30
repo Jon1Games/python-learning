@@ -1,7 +1,7 @@
 from mcpi import World
 
 class Wall:
-    def __init__(self, height: int, width: int, pos: tuple, bw: World, rotated: bool = False, material_id: str = "minecraft:stone"):
+    def __init__(self, pos: tuple, bw: World, height: int = 5, width: int = 6, rotated: bool = False, material_id: str = "minecraft:stone"):
         self.height = height
         self.width = width
         self.pos = pos
