@@ -1,9 +1,10 @@
-from mcpi import World
+from mcpi.minecraft import Minecraft
 from wall import Wall
+from mcpi import block
 
 class WallWithDoor(Wall):
-    def __init__(self, pos: tuple, bw: World, height: int = 5, width: int = 6, rotated: bool = False, material_id: str = "minecraft:stone", door_material_id: str = "minecraft:air"):
-        super().__init__(pos, bw, height, width, rotated, material_id)
+    def __init__(self, pos: tuple, mc: Minecraft, height: int = 5, width: int = 6, rotated: bool = False, material_id: int = block.STONE.id, door_material_id: int = block.AIR.id):
+        super().__init__(pos, mc, height, width, rotated, material_id)
         self.door_material_id = door_material_id
         
     def build(self):
