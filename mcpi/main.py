@@ -6,7 +6,7 @@ from wallWithWindows import WallWithWindows
 
 def pos(offset=(0,0,0)):
     player_pos = mc.player.getPos()
-    return (int(player_pos.x) + offset[0], int(player_pos.y) + offset[1], int(player_pos.z) + offset[2])
+    return (int(player_pos.x // 1) + offset[0], int(player_pos.y // 1) + offset[1], int(player_pos.z // 1) + offset[2])
 
 # Verbinde mit Minecraft
 mc = Minecraft.create(address="192.168.172.44", port=4711)
