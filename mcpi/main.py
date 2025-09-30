@@ -3,6 +3,7 @@ from mcpi import block
 import time
 from wall import Wall
 from wallWithWindows import WallWithWindows
+from wallWithDoor import WallWithDoor
 
 def pos(offset=(0,0,0)):
     player_pos = mc.player.getPos()
@@ -30,6 +31,17 @@ while True:
             # Sende eine Nachricht an den Spieler
             mc.postToChat("3x4x5 Blöcke platziert!")
         elif hit.message == "2":
-            test = WallWithWindows(windows_material_id="minecraft:glass")
-            pass
+            test = Wall(pos=pos((10,0,0)), mc=mc, material_id=block.STONE.id)
+            test2 = Wall(pos=pos((5,0,0)), mc=mc, material_id=block.STONE.id, rotated=True)
+            test.build()
+            test2.build()
+        elif hit.message == "3":
+            test = WallWithWindows(pos=pos((10,0,0)), mc=mc, material_id=block.STONE.id, windows_material_id=block.GLASS.id)
+            test2 = WallWithWindows(pos=pos((5,0,0)), mc=mc, material_id=block.STONE.id, windows_material_id=block.GLASS.id, rotated=True)
+            test3 = WallWithDoor(pos=pos((5,0,0)), mc=mc, material_id=block.STONE.id, door_material_id=block.AIR.id)
+            test4 = WallWithDoor(pos=pos((5,0,5)), mc=mc, material_id=block.STONE.id, door_material_id=block.AIR.id, rotated=True)
+            test.build()
+            test2.build()
+            test3.build()
+            test4.build()
     time.sleep(0.1)
