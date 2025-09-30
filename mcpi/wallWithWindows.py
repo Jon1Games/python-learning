@@ -9,7 +9,7 @@ class WallWithWindows(Wall):
     def build(self):
         x, y, z = self.pos
         if self.rotated:
-            # Baue die Wand mit Fenstern
+            # Build the wall with windows
             for i in range(self.width):
                 for j in range(self.height):
                     if (i % 3 == 1) and (j % 3 == 1):
@@ -17,7 +17,7 @@ class WallWithWindows(Wall):
                     else:
                         self.bw.setBlock(x + i, y + j, z, self.material_id)
         else:
-            # Baue die Wand mit Fenstern
+            # Build the wall with windows
             for i in range(self.width):
                 for j in range(self.height):
                     if (i % 3 == 1) and (j % 3 == 1):
