@@ -7,7 +7,7 @@
 # │ + width: float                  │
 # ├─────────────────────────────────┤
 # │ + Rechteck(length, width)       │
-# │ + flaeche(): float              │
+# │ + flaeche(): float              │   
 # │ + umfang(): float               │
 # └─────────────────────────────────┘
 
