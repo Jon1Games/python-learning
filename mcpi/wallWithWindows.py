@@ -12,7 +12,7 @@ class WallWithWindows(Wall):
             # Build the wall with windows
             for i in range(self.width):
                 for j in range(self.height):
-                    if (i % 3 == 1) and (j % 3 == 1):
+                    if (i != 1 and i != self.width-1) and (j == 2 or j == 3):
                         self.bw.setBlock(x + i, y + j, z, self.windows_material_id)
                     else:
                         self.bw.setBlock(x + i, y + j, z, self.material_id)
@@ -20,7 +20,7 @@ class WallWithWindows(Wall):
             # Build the wall with windows
             for i in range(self.width):
                 for j in range(self.height):
-                    if (i % 3 == 1) and (j % 3 == 1):
+                    if (i != 1 and i != self.width-1) and (j == 2 or j == 3):
                         self.bw.setBlock(x, y + j, z + i, self.windows_material_id)
                     else:
                         self.bw.setBlock(x, y + j, z + i, self.material_id)
