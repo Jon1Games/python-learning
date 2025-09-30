@@ -9,7 +9,7 @@ def pos(offset=(0,0,0)):
     return (int(player_pos.x // 1) + offset[0], int(player_pos.y // 1) + offset[1], int(player_pos.z // 1) + offset[2])
 
 # Verbinde mit Minecraft
-mc = Minecraft.create(address="192.168.172.44", port=4711)
+mc = Minecraft.create(address="yourdomain.com", port=4711)
 
 # Warte auf Tastendruck zum Fortfahren
 while True:
